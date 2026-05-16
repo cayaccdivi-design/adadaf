@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, Search, Star, Coins, CheckCircle, Eye, Zap, Lock, Sparkles, Edit2, Trash2, ChevronLeft, ChevronRight, ImagePlus, Filter, MousePointer2, Wand2 } from 'lucide-react'
+import { ShoppingBag, Search, Star, Coins, CheckCircle, Eye, Zap, Lock, Sparkles, Edit2, Trash2, ChevronLeft, ChevronRight, ImagePlus, Filter, MousePointer2, Wand2, Download } from 'lucide-react'
 import { useAuthStore } from '../store/useAuthStore'
 import { useShopStore } from '../store/useShopStore'
 import { useAppStore } from '../store/useAppStore'
@@ -450,7 +450,7 @@ function ProductCard({ p, onClick }) {
             style={{ background: 'rgba(5, 46, 22, 0.72)', backdropFilter: 'blur(4px)' }}>
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-emerald-300 text-xs font-semibold"
               style={{ background: 'rgba(43,242,192,0.18)', border: '1px solid rgba(43,242,192,0.35)' }}>
-              <CheckCircle size={14} /> Đã sở hữu
+              <Download size={13} /> Đã sở hữu — bấm để tải
             </div>
           </div>
         )}
@@ -514,7 +514,7 @@ function ProductCard({ p, onClick }) {
 /* ─── PRODUCT MODAL ──────────────────────────────────────── */
 function ProductModal({ product, onClose, isAdmin, onEditClick, isStoreProduct }) {
   const { user, deductBalance } = useAuthStore()
-  const { addOwned, isOwned, toast } = useAppStore()
+  const { addOwned, isOwned, downloadProduct, toast } = useAppStore()
   const updateProduct = useShopStore(s => s.updateProduct)
   const navigate = useNavigate()
   const owned = product ? isOwned(product.id) : false
@@ -713,10 +713,16 @@ function ProductModal({ product, onClose, isAdmin, onEditClick, isStoreProduct }
               </button>
             )}
             {owned ? (
-              <button disabled
-                className="w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 text-emerald-400"
-                style={{ background: 'rgba(43,242,192,0.12)', border: '1px solid rgba(43,242,192,0.3)' }}>
-                <CheckCircle size={15} /> Đã sở hữu
+              <button
+                onClick={() => downloadProduct(product)}
+                className="w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(43,242,192,0.18), rgba(77,208,255,0.14))',
+                  border: '1px solid rgba(43,242,192,0.35)',
+                  color: 'rgba(110,231,183,1)',
+                  boxShadow: '0 4px 16px -4px rgba(43,242,192,0.4)',
+                }}>
+                <Download size={15} /> Tải xuống ngay
               </button>
             ) : (
               <button onClick={buy} className="w-full btn-primary py-3 text-sm flex items-center justify-center gap-2">
