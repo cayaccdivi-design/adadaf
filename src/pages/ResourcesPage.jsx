@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FolderOpen, Download, Heart, Eye, Filter, Grid3X3, List, Star, ExternalLink, Image, FileType, Box, Cpu, Layers } from 'lucide-react'
+import { FolderOpen, Download, Heart, Eye, Filter, Grid3X3, List, Star, ExternalLink, Image, FileType, Box, Cpu, Layers, Search, MousePointer2, Sparkles } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore'
+import GuideSection from '../components/ui/GuideSection'
 
 const CATEGORIES = [
   { value: 'all',      label: 'Tất cả',  icon: Grid3X3 },
@@ -176,6 +177,25 @@ export default function ResourcesPage() {
           </div>
         ))}
       </div>
+
+      {/* Guide */}
+      <GuideSection
+        title="Hướng dẫn sử dụng kho tài nguyên"
+        subtitle="Tìm, lọc và tải tài nguyên miễn phí cho dự án thiết kế của bạn"
+        accent="emerald"
+        icon={FolderOpen}
+        badgeText="3 bước"
+        steps={[
+          { icon: Filter,        title: 'Lọc theo danh mục', desc: 'Chọn loại tài nguyên: Ảnh, PSD, Icon, Mockup, AI Asset.', tip: 'Có thể đổi sang chế độ List để xem chi tiết file size.' },
+          { icon: Search,        title: 'Tìm & sắp xếp',     desc: 'Sắp xếp theo phổ biến, mới nhất hoặc đánh giá cao.', tip: 'Click ❤ để lưu vào danh sách yêu thích.' },
+          { icon: Download,      title: 'Tải miễn phí',      desc: 'Bấm "Tải miễn phí" với các asset gắn nhãn FREE.', tip: 'Asset Premium cần mở khóa bằng coin trong cửa hàng.' },
+        ]}
+        tips={[
+          'Hơn 10,000+ tài nguyên cập nhật liên tục — quay lại thường xuyên để không bỏ lỡ.',
+          'Định dạng đa dạng: PNG, PSD, SVG, JPG, JSON — phù hợp mọi quy trình thiết kế.',
+          'Asset có nhãn HOT là những tài nguyên đang được tải nhiều nhất tuần.',
+        ]}
+      />
 
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">

@@ -165,10 +165,12 @@ const QUICK_ACTIONS = [
 ]
 
 const FEATURES = [
-  { icon: '🛍️', title: 'Cửa hàng thiết kế',  desc: 'Mua thumbnail, logo, banner PSD chất lượng cao. Chỉnh sửa trực tiếp trên web sau khi mua.',  link: '/shop',       accent: '#6e4bff' },
-  { icon: '✂️',  title: 'Xóa nền tự động',    desc: 'Tách nền ảnh chỉ trong 1 giây. Hỗ trợ PNG, JPG. Không cần Photoshop.',                       link: '/remove-bg',  accent: '#0ea5e9' },
-  { icon: '📦',  title: 'Kho tài nguyên',      desc: '10,000+ file PSD, icon, mockup miễn phí. Tải về và dùng ngay cho dự án của bạn.',             link: '/resources',  accent: '#8b5cf6' },
-  { icon: '🖼️', title: 'Ghép ảnh Collage',   desc: 'Ghép nhiều ảnh thành collage đẹp với nhiều bố cục. Tải về PNG chất lượng cao ngay lập tức.',   link: '/collage',    accent: '#ec4899' },
+  { icon: '🛍️', title: 'Cửa hàng thiết kế',  desc: 'Mua thumbnail, logo, banner PSD chất lượng cao.',  link: '/shop',       accent: '#6e4bff' },
+  { icon: '✂️',  title: 'Xóa nền tự động',    desc: 'Tách nền ảnh chỉ trong 1 giây — không cần Photoshop.', link: '/remove-bg',  accent: '#0ea5e9' },
+  { icon: '📦',  title: 'Kho tài nguyên',      desc: '10,000+ file PSD, icon, mockup miễn phí.',         link: '/resources',  accent: '#8b5cf6' },
+  { icon: '🖼️', title: 'Ghép ảnh Collage',   desc: 'Nhiều bố cục — xuất PNG chất lượng cao ngay.',     link: '/collage',    accent: '#ec4899' },
+  { icon: '🤖',  title: 'AI Composer',         desc: 'Ghép ảnh + text với AI — preset thông minh.',      link: '/composer',   accent: '#22d3ee' },
+  { icon: '💻',  title: 'Source Code',         desc: 'Mua bộ code template, layout, ứng dụng nhỏ.',       link: '/source',     accent: '#f59e0b' },
 ]
 
 const REVIEWS = [
@@ -404,20 +406,99 @@ export default function Dashboard() {
         </motion.div>
       </div>
 
-      {/* ── Features ── */}
-      <div>
-        <div className="flex items-center gap-2 mb-5">
-          <div className="w-7 h-7 rounded-lg bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center">
-            <Star size={13} className="text-yellow-400 fill-yellow-400" />
+      {/* ── Features (banner ngang) ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, ease: [0.22, 0.8, 0.22, 1] }}
+        className="relative"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center">
+              <Star size={13} className="text-yellow-400 fill-yellow-400" />
+            </div>
+            <h2 className="font-display text-base font-semibold text-white">Tính năng nổi bật</h2>
           </div>
-          <h2 className="font-display text-base font-semibold text-white">Tính năng nổi bật</h2>
+          <span className="text-[11px] text-white/30 hidden sm:block">← cuộn ngang để xem thêm →</span>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
-          {FEATURES.map((f, i) => (
-            <FeatureCard key={f.title} {...f} delay={i * 0.08 + 0.25} />
-          ))}
+
+        {/* Horizontal scrolling banner — fades on edges, snaps on each card,
+            auto-shines a sweep across when first revealed. */}
+        <div className="relative">
+          {/* Edge fade masks */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 z-10"
+            style={{ background: 'linear-gradient(90deg, #0c0c14 0%, transparent)' }} />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 z-10"
+            style={{ background: 'linear-gradient(270deg, #0c0c14 0%, transparent)' }} />
+
+          <div
+            className="flex gap-4 overflow-x-auto pb-3 px-1 snap-x snap-mandatory scroll-smooth"
+            style={{ scrollbarWidth: 'thin' }}
+          >
+            {FEATURES.map((f, i) => (
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.07 + 0.45, ease: [0.22, 0.8, 0.22, 1] }}
+                className="flex-shrink-0 snap-start"
+                style={{ width: 'min(340px, 80vw)' }}
+              >
+                <Link
+                  to={f.link}
+                  className="group relative h-full flex items-center gap-4 rounded-2xl p-5 overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                  style={{
+                    background: `linear-gradient(135deg, ${f.accent}15 0%, rgba(255,255,255,0.02) 60%)`,
+                    border: `1px solid ${f.accent}33`,
+                    backdropFilter: 'blur(16px)',
+                    boxShadow: `0 4px 24px rgba(0,0,0,0.25), 0 0 0 1px ${f.accent}10 inset`,
+                  }}
+                >
+                  {/* Decorative orb */}
+                  <div
+                    className="absolute -top-12 -right-12 w-40 h-40 rounded-full pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ background: `radial-gradient(circle, ${f.accent}55 0%, transparent 70%)` }}
+                  />
+                  {/* Sheen sweep on hover */}
+                  <div
+                    className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background: 'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%)',
+                      transform: 'translateX(-110%)',
+                      animation: 'shimmer 2.5s ease infinite',
+                    }}
+                  />
+
+                  {/* Icon tile */}
+                  <div
+                    className="relative w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+                    style={{
+                      background: `${f.accent}25`,
+                      border: `1px solid ${f.accent}55`,
+                      boxShadow: `0 0 20px -4px ${f.accent}66`,
+                    }}
+                  >
+                    <span className="select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]">{f.icon}</span>
+                  </div>
+
+                  {/* Text */}
+                  <div className="relative min-w-0 flex-1">
+                    <h3 className="font-semibold text-white text-sm mb-1 truncate flex items-center gap-2">
+                      {f.title}
+                      <ArrowRight
+                        size={12}
+                        className="text-white/30 group-hover:text-white/80 group-hover:translate-x-1 transition-all"
+                      />
+                    </h3>
+                    <p className="text-xs text-white/45 leading-relaxed line-clamp-2">{f.desc}</p>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Reviews ── */}
       <div>

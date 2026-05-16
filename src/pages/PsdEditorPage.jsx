@@ -5,7 +5,7 @@ import {
   Upload, Layers, ZoomIn, ZoomOut, Maximize2,
   Lock, Unlock, Star, ChevronLeft, Loader, PanelLeft, PanelRight,
   Download, Store, ImagePlus, FileType, Image as ImageIcon,
-  Undo2, Redo2, RotateCcw,
+  Undo2, Redo2, RotateCcw, MousePointer2, Type, Sparkles,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
@@ -16,6 +16,7 @@ import { useAuthStore } from '../store/useAuthStore'
 import { useShopStore } from '../store/useShopStore'
 import { useAppStore } from '../store/useAppStore'
 import Modal from '../components/ui/Modal'
+import GuideSection from '../components/ui/GuideSection'
 
 import LayerRow from '../components/psd/LayerRow'
 import ResizableSidebar from '../components/psd/ResizableSidebar'
@@ -1135,40 +1136,62 @@ export default function PsdEditorPage() {
           {loading && <Spinner label={loadingMsg} />}
 
           {!loading && !psdMeta && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              onDragOver={e => { e.preventDefault(); setDragging(true) }}
-              onDragLeave={() => setDragging(false)}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={clsx(
-                'relative rounded-3xl border-2 border-dashed cursor-pointer transition-all duration-300 m-6',
-                dragging
-                  ? 'border-violet-400 bg-violet-500/10 scale-[1.01]'
-                  : 'border-white/[0.1] hover:border-violet-400/50 hover:bg-white/[0.02]',
-              )}
-              style={{ minWidth: 380, minHeight: 280 }}
-            >
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
-                <motion.div
-                  animate={dragging ? { scale: 1.2, rotate: 10 } : { scale: 1, rotate: 0 }}
-                  className={clsx(
-                    'w-20 h-20 rounded-2xl mb-5 flex items-center justify-center border transition-all',
-                    dragging ? 'bg-violet-500/30 border-violet-400/50' : 'bg-white/[0.04] border-white/[0.08]',
-                  )}
-                >
-                  <Upload size={32} className={dragging ? 'text-violet-300' : 'text-white/30'} />
-                </motion.div>
-                <p className="text-lg font-semibold text-white/80 mb-2">
-                  {dragging ? 'Thả file PSD vào đây!' : 'Kéo thả file PSD'}
-                </p>
-                <p className="text-sm text-white/40 mb-4">hoặc click để chọn</p>
-                <p className="text-xs text-white/25">Chỉ .psd – tối đa 80MB</p>
-              </div>
-              <input ref={fileInputRef} type="file" accept=".psd" className="hidden"
-                onChange={e => handleFile(e.target.files[0])} />
-            </motion.div>
+            <div className="flex flex-col items-center justify-center gap-5 w-full p-6 max-w-3xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                onDragOver={e => { e.preventDefault(); setDragging(true) }}
+                onDragLeave={() => setDragging(false)}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={clsx(
+                  'relative rounded-3xl border-2 border-dashed cursor-pointer transition-all duration-300 w-full',
+                  dragging
+                    ? 'border-violet-400 bg-violet-500/10 scale-[1.01]'
+                    : 'border-white/[0.1] hover:border-violet-400/50 hover:bg-white/[0.02]',
+                )}
+                style={{ minHeight: 280 }}
+              >
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                  <motion.div
+                    animate={dragging ? { scale: 1.2, rotate: 10 } : { scale: 1, rotate: 0 }}
+                    className={clsx(
+                      'w-20 h-20 rounded-2xl mb-5 flex items-center justify-center border transition-all',
+                      dragging ? 'bg-violet-500/30 border-violet-400/50' : 'bg-white/[0.04] border-white/[0.08]',
+                    )}
+                  >
+                    <Upload size={32} className={dragging ? 'text-violet-300' : 'text-white/30'} />
+                  </motion.div>
+                  <p className="text-lg font-semibold text-white/80 mb-2">
+                    {dragging ? 'Thả file PSD vào đây!' : 'Kéo thả file PSD'}
+                  </p>
+                  <p className="text-sm text-white/40 mb-4">hoặc click để chọn</p>
+                  <p className="text-xs text-white/25">Chỉ .psd – tối đa 80MB</p>
+                </div>
+                <input ref={fileInputRef} type="file" accept=".psd" className="hidden"
+                  onChange={e => handleFile(e.target.files[0])} />
+              </motion.div>
+
+              {/* Guide */}
+              <GuideSection
+                title="Hướng dẫn PSD Editor"
+                subtitle="Chỉnh sửa file Photoshop trực tiếp trên trình duyệt — không cần cài Photoshop"
+                accent="brand"
+                icon={Layers}
+                badgeText="4 bước"
+                steps={[
+                  { icon: Upload,        title: 'Tải file PSD',  desc: 'Kéo & thả file .psd hoặc click chọn từ máy.', tip: 'Hỗ trợ tối đa 80MB. File càng nhẹ, mở càng nhanh.' },
+                  { icon: Layers,        title: 'Quản lý layer', desc: 'Panel bên trái hiển thị toàn bộ layer. Khóa, ẩn, đổi tên, di chuyển dễ dàng.', tip: 'Drag & drop để hoán đổi thứ tự layer.' },
+                  { icon: Type,          title: 'Chỉnh sửa',     desc: 'Click chọn layer → bảng Properties bên phải để đổi text, màu, opacity, vị trí.', tip: 'Ctrl+Z / Ctrl+Y để undo/redo nhanh.' },
+                  { icon: Download,      title: 'Xuất ảnh',      desc: 'Bấm nút Export — chọn PNG/JPG/WebP HD không watermark (50 coins).', tip: 'Bản nháp được tự động lưu để khôi phục sau.' },
+                ]}
+                tips={[
+                  'Toàn bộ xử lý chạy trên trình duyệt — file của bạn không bị tải lên server.',
+                  'Layer được phát hiện vai trò tự động (text, image, mask, group...) để dễ chỉnh sửa.',
+                  'Nếu là Admin, bạn có thể publish file PSD đã chỉnh sửa lên Cửa hàng.',
+                ]}
+              />
+            </div>
           )}
 
           {!loading && psdMeta && (

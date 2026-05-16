@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, Search, Star, Coins, CheckCircle, Eye, Zap, Lock, Sparkles, Edit2, Trash2, ChevronLeft, ChevronRight, ImagePlus } from 'lucide-react'
+import { ShoppingBag, Search, Star, Coins, CheckCircle, Eye, Zap, Lock, Sparkles, Edit2, Trash2, ChevronLeft, ChevronRight, ImagePlus, Filter, MousePointer2, Wand2, Download } from 'lucide-react'
 import { useAuthStore } from '../store/useAuthStore'
 import { useShopStore } from '../store/useShopStore'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
+import GuideSection from '../components/ui/GuideSection'
 import Modal from '../components/ui/Modal'
 
 /* ─── DATA ───────────────────────────────────────────────── */
@@ -449,7 +450,7 @@ function ProductCard({ p, onClick }) {
             style={{ background: 'rgba(5, 46, 22, 0.72)', backdropFilter: 'blur(4px)' }}>
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-emerald-300 text-xs font-semibold"
               style={{ background: 'rgba(43,242,192,0.18)', border: '1px solid rgba(43,242,192,0.35)' }}>
-              <CheckCircle size={14} /> Đã sở hữu
+              <Download size={13} /> Đã sở hữu — bấm để tải
             </div>
           </div>
         )}
@@ -513,7 +514,7 @@ function ProductCard({ p, onClick }) {
 /* ─── PRODUCT MODAL ──────────────────────────────────────── */
 function ProductModal({ product, onClose, isAdmin, onEditClick, isStoreProduct }) {
   const { user, deductBalance } = useAuthStore()
-  const { addOwned, isOwned, toast } = useAppStore()
+  const { addOwned, isOwned, downloadProduct, toast } = useAppStore()
   const updateProduct = useShopStore(s => s.updateProduct)
   const navigate = useNavigate()
   const owned = product ? isOwned(product.id) : false
@@ -712,10 +713,16 @@ function ProductModal({ product, onClose, isAdmin, onEditClick, isStoreProduct }
               </button>
             )}
             {owned ? (
-              <button disabled
-                className="w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 text-emerald-400"
-                style={{ background: 'rgba(43,242,192,0.12)', border: '1px solid rgba(43,242,192,0.3)' }}>
-                <CheckCircle size={15} /> Đã sở hữu
+              <button
+                onClick={() => downloadProduct(product)}
+                className="w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(43,242,192,0.18), rgba(77,208,255,0.14))',
+                  border: '1px solid rgba(43,242,192,0.35)',
+                  color: 'rgba(110,231,183,1)',
+                  boxShadow: '0 4px 16px -4px rgba(43,242,192,0.4)',
+                }}>
+                <Download size={15} /> Tải xuống ngay
               </button>
             ) : (
               <button onClick={buy} className="w-full btn-primary py-3 text-sm flex items-center justify-center gap-2">
@@ -770,6 +777,26 @@ export default function ShopPage() {
 
 
       </div>
+
+      {/* ── Guide ── */}
+      <GuideSection
+        title="Hướng dẫn mua hàng"
+        subtitle="Mua thumbnail, logo, banner cao cấp — chỉnh sửa trực tiếp sau khi sở hữu"
+        accent="brand"
+        icon={ShoppingBag}
+        compact
+        badgeText="4 bước"
+        steps={[
+          { icon: Filter,        title: 'Lọc sản phẩm',  desc: 'Chọn danh mục (Thumbnail, Logo, Banner...) và loại (Tĩnh / Động).', tip: 'Sản phẩm Động (animated) có hiệu ứng video, Lottie, GIF.' },
+          { icon: MousePointer2, title: 'Xem chi tiết',  desc: 'Click vào card để mở preview lớn, slideshow ảnh và mô tả đầy đủ.' },
+          { icon: Coins,         title: 'Thanh toán',    desc: 'Đủ coin trong ví thì click "Mua ngay". Có thể nhập mã giảm giá.', tip: 'Nạp coin nhanh ở trang Topup nếu chưa đủ.' },
+          { icon: Wand2,         title: 'Chỉnh sửa',     desc: 'Sản phẩm có nhãn "Có thể tùy chỉnh" sẽ mở Customer Editor.', tip: 'Đổi text, màu, ảnh, xuất file PNG/JPG ngay trên web.' },
+        ]}
+        tips={[
+          'Mọi sản phẩm sau khi mua đều thuộc sở hữu vĩnh viễn — không cần mua lại.',
+          'Mã giảm giá thường được tặng kèm khi quay số trong trang Hộp quà.',
+        ]}
+      />
 
       {/* ── Filters ── */}
       <div className="flex flex-wrap items-center gap-2">

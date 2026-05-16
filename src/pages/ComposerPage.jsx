@@ -1,7 +1,7 @@
 import { useRef, useCallback, useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Undo2, Redo2, Download, RotateCcw, Upload, Sun, Sliders, Moon, Droplets } from 'lucide-react'
+import { Sparkles, Undo2, Redo2, Download, RotateCcw, Upload, Sun, Sliders, Moon, Droplets, MousePointer2, Layers, Wand2, Type } from 'lucide-react'
 import clsx from 'clsx'
 import { useComposerStore } from '../store/useComposerStore'
 import { useAuthStore } from '../store/useAuthStore'
@@ -10,6 +10,7 @@ import ComposerCanvas from '../components/composer/ComposerCanvas'
 import LayerPanel from '../components/composer/LayerPanel'
 import CommandBar from '../components/composer/CommandBar'
 import ToolBar from '../components/composer/ToolBar'
+import GuideSection from '../components/ui/GuideSection'
 
 // ─── Upload Zone ──────────────────────────────────────────────────────────────
 function UploadZone({ onUpload }) {
@@ -199,8 +200,27 @@ export default function ComposerPage() {
             style={{ background: 'rgba(10,8,18,0.6)' }}>
             <AnimatePresence mode="wait">
               {!background ? (
-                <motion.div key="upload" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.2 }}>
+                <motion.div key="upload" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.2 }}
+                  className="w-full max-w-3xl flex flex-col items-center gap-5 py-4">
                   <UploadZone onUpload={handleBackgroundUpload} />
+                  <GuideSection
+                    title="Hướng dẫn AI Composer"
+                    subtitle="Ghép nhiều ảnh, thêm text & hiệu ứng, xuất thành thiết kế bắt mắt"
+                    accent="brand"
+                    icon={Wand2}
+                    badgeText="4 bước"
+                    className="w-full"
+                    steps={[
+                      { icon: Upload,        title: 'Tải nền',     desc: 'Kéo ảnh nền vào khung hoặc click để chọn — đây sẽ là canvas.', tip: 'Ảnh nền quyết định kích thước canvas.' },
+                      { icon: Layers,        title: 'Thêm layer',  desc: 'Dùng ToolBar bên trái để thêm ảnh, text, shape lên canvas.', tip: 'Mỗi layer có thể di chuyển, scale, xoay tự do.' },
+                      { icon: Sliders,       title: 'Tinh chỉnh',  desc: 'Chọn layer → đổi màu, độ mờ, blend mode, hiệu ứng sáng.', tip: 'Ctrl+Z / Ctrl+Y để undo/redo nhanh.' },
+                      { icon: Download,      title: 'Xuất ảnh',    desc: 'Bấm Export để tải về PNG độ phân giải cao.', tip: 'Mọi xử lý chạy trên trình duyệt — file của bạn an toàn.' },
+                    ]}
+                    tips={[
+                      'Có thể thêm nhiều ảnh chồng lên nhau, áp dụng filter Sun, Moon, Droplets...',
+                      'Kéo trực tiếp ảnh từ máy tính vào canvas để thêm layer ảnh.',
+                    ]}
+                  />
                 </motion.div>
               ) : (
                 <motion.div key="canvas" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}

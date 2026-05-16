@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Coins, QrCode, Copy, CheckCheck, X, Zap, Shield, Clock } from 'lucide-react'
+import { Coins, QrCode, Copy, CheckCheck, X, Zap, Shield, Clock, MousePointer2, CreditCard, Sparkles } from 'lucide-react'
 import { useAuthStore } from '../store/useAuthStore'
 import { useAppStore } from '../store/useAppStore'
 import Modal from '../components/ui/Modal'
+import GuideSection from '../components/ui/GuideSection'
 
 const PACKAGES = [
   { amount: 20000,  bonus: 0,    label: '20.000đ',  popular: false, color: 'from-slate-600 to-slate-500' },
@@ -140,6 +141,26 @@ export default function TopupPage() {
           </div>
         )}
       </motion.div>
+
+      {/* Guide */}
+      <GuideSection
+        title="Hướng dẫn nạp tiền"
+        subtitle="Nạp tiền vào ví NOVA để mua thumbnail, logo, banner và mở khóa tài nguyên Premium"
+        accent="amber"
+        icon={CreditCard}
+        badgeText="4 bước"
+        steps={[
+          { icon: MousePointer2, title: 'Chọn gói',         desc: 'Click vào gói nạp phù hợp — gói lớn hơn được tặng bonus.', tip: 'Gói "Phổ biến" có ưu đãi tốt nhất cho người dùng mới.' },
+          { icon: QrCode,         title: 'Quét QR',          desc: 'Mở app ngân hàng / Momo, quét mã QR hiển thị.', tip: 'Hệ thống tự động tạo QR có sẵn nội dung chuyển khoản.' },
+          { icon: Sparkles,       title: 'Chuyển khoản',     desc: 'Giữ nguyên nội dung CK để hệ thống nhận diện tự động.', tip: 'Sai nội dung CK có thể khiến giao dịch bị giữ lại.' },
+          { icon: Coins,          title: 'Nhận coin',        desc: 'Số dư cộng vào ví trong 1–5 phút sau khi giao dịch xong.', tip: 'Bonus được tặng kèm ngay khi cộng tiền.' },
+        ]}
+        tips={[
+          'Mọi giao dịch đều được bảo mật và mã hóa qua VietQR.',
+          'Liên hệ admin nếu sau 10 phút vẫn chưa nhận được coin.',
+          'Coin trong ví không hết hạn, có thể dùng cho mọi sản phẩm trong cửa hàng.',
+        ]}
+      />
 
       {/* Packages */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
