@@ -201,26 +201,13 @@ export default function ComposerPage() {
             <AnimatePresence mode="wait">
               {!background ? (
                 <motion.div key="upload" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.2 }}
-                  className="w-full max-w-3xl flex flex-col items-center gap-5 py-4">
+                  className="w-full max-w-md flex flex-col items-center gap-3 py-4">
                   <UploadZone onUpload={handleBackgroundUpload} />
-                  <GuideSection
-                    title="Hướng dẫn AI Composer"
-                    subtitle="Ghép nhiều ảnh, thêm text & hiệu ứng, xuất thành thiết kế bắt mắt"
-                    accent="brand"
-                    icon={Wand2}
-                    badgeText="4 bước"
-                    className="w-full"
-                    steps={[
-                      { icon: Upload,        title: 'Tải nền',     desc: 'Kéo ảnh nền vào khung hoặc click để chọn — đây sẽ là canvas.', tip: 'Ảnh nền quyết định kích thước canvas.' },
-                      { icon: Layers,        title: 'Thêm layer',  desc: 'Dùng ToolBar bên trái để thêm ảnh, text, shape lên canvas.', tip: 'Mỗi layer có thể di chuyển, scale, xoay tự do.' },
-                      { icon: Sliders,       title: 'Tinh chỉnh',  desc: 'Chọn layer → đổi màu, độ mờ, blend mode, hiệu ứng sáng.', tip: 'Ctrl+Z / Ctrl+Y để undo/redo nhanh.' },
-                      { icon: Download,      title: 'Xuất ảnh',    desc: 'Bấm Export để tải về PNG độ phân giải cao.', tip: 'Mọi xử lý chạy trên trình duyệt — file của bạn an toàn.' },
-                    ]}
-                    tips={[
-                      'Có thể thêm nhiều ảnh chồng lên nhau, áp dụng filter Sun, Moon, Droplets...',
-                      'Kéo trực tiếp ảnh từ máy tính vào canvas để thêm layer ảnh.',
-                    ]}
-                  />
+                  <p className="text-[11px] text-white/30 flex items-center gap-1.5">
+                    💡 Bấm <kbd className="px-1 py-0.5 rounded font-mono text-brand-300"
+                      style={{ background: 'rgba(110,75,255,0.12)', border: '1px solid rgba(110,75,255,0.25)' }}>?</kbd>
+                    ở góc dưới phải để xem hướng dẫn
+                  </p>
                 </motion.div>
               ) : (
                 <motion.div key="canvas" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}
@@ -242,6 +229,26 @@ export default function ComposerPage() {
           <CommandBar />
         </div>
       </div>
+
+      {/* Floating help — out of canvas, never overlaps editing UI. */}
+      <GuideSection
+        floating
+        floatPosition="br"
+        title="Hướng dẫn AI Composer"
+        subtitle="Ghép nhiều ảnh, thêm text & hiệu ứng"
+        accent="brand"
+        icon={Wand2}
+        steps={[
+          { icon: Upload,   title: 'Tải nền',     desc: 'Kéo ảnh nền vào khung — đây sẽ là canvas chính.', tip: 'Kích thước ảnh nền = kích thước canvas.' },
+          { icon: Layers,   title: 'Thêm layer',  desc: 'Dùng ToolBar bên trái để thêm ảnh, text, shape.', tip: 'Mỗi layer di chuyển, scale, xoay tự do.' },
+          { icon: Sliders,  title: 'Tinh chỉnh',  desc: 'Chọn layer → đổi màu, độ mờ, blend mode, filter.', tip: 'Ctrl+Z / Ctrl+Y để undo/redo.' },
+          { icon: Download, title: 'Xuất ảnh',    desc: 'Bấm nút Tải PNG ở thanh trên cùng để xuất file.', tip: 'Pixel ratio 2× cho ảnh sắc nét.' },
+        ]}
+        tips={[
+          'Mọi xử lý đều chạy trên trình duyệt — file của bạn an toàn.',
+          'Bấm phím "?" để mở/đóng hướng dẫn này.',
+        ]}
+      />
     </>
   )
 }

@@ -1136,7 +1136,7 @@ export default function PsdEditorPage() {
           {loading && <Spinner label={loadingMsg} />}
 
           {!loading && !psdMeta && (
-            <div className="flex flex-col items-center justify-center gap-5 w-full p-6 max-w-3xl mx-auto">
+            <div className="flex flex-col items-center justify-center gap-5 w-full p-6 max-w-2xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -1171,26 +1171,11 @@ export default function PsdEditorPage() {
                 <input ref={fileInputRef} type="file" accept=".psd" className="hidden"
                   onChange={e => handleFile(e.target.files[0])} />
               </motion.div>
-
-              {/* Guide */}
-              <GuideSection
-                title="Hướng dẫn PSD Editor"
-                subtitle="Chỉnh sửa file Photoshop trực tiếp trên trình duyệt — không cần cài Photoshop"
-                accent="brand"
-                icon={Layers}
-                badgeText="4 bước"
-                steps={[
-                  { icon: Upload,        title: 'Tải file PSD',  desc: 'Kéo & thả file .psd hoặc click chọn từ máy.', tip: 'Hỗ trợ tối đa 80MB. File càng nhẹ, mở càng nhanh.' },
-                  { icon: Layers,        title: 'Quản lý layer', desc: 'Panel bên trái hiển thị toàn bộ layer. Khóa, ẩn, đổi tên, di chuyển dễ dàng.', tip: 'Drag & drop để hoán đổi thứ tự layer.' },
-                  { icon: Type,          title: 'Chỉnh sửa',     desc: 'Click chọn layer → bảng Properties bên phải để đổi text, màu, opacity, vị trí.', tip: 'Ctrl+Z / Ctrl+Y để undo/redo nhanh.' },
-                  { icon: Download,      title: 'Xuất ảnh',      desc: 'Bấm nút Export — chọn PNG/JPG/WebP HD không watermark (50 coins).', tip: 'Bản nháp được tự động lưu để khôi phục sau.' },
-                ]}
-                tips={[
-                  'Toàn bộ xử lý chạy trên trình duyệt — file của bạn không bị tải lên server.',
-                  'Layer được phát hiện vai trò tự động (text, image, mask, group...) để dễ chỉnh sửa.',
-                  'Nếu là Admin, bạn có thể publish file PSD đã chỉnh sửa lên Cửa hàng.',
-                ]}
-              />
+              <p className="text-[11px] text-white/30 flex items-center gap-1.5">
+                💡 Bấm nút <kbd className="px-1 py-0.5 rounded font-mono text-violet-300"
+                  style={{ background: 'rgba(110,75,255,0.12)', border: '1px solid rgba(110,75,255,0.25)' }}>?</kbd>
+                ở góc dưới phải để xem hướng dẫn nhanh
+              </p>
             </div>
           )}
 
@@ -1410,6 +1395,26 @@ export default function PsdEditorPage() {
           </div>
         </div>
       </Modal>
+
+      {/* Floating help — never covers the canvas, always one click away. */}
+      <GuideSection
+        floating
+        floatPosition="br"
+        title="Hướng dẫn PSD Editor"
+        subtitle="Chỉnh sửa file Photoshop trực tiếp trên trình duyệt"
+        accent="brand"
+        icon={Layers}
+        steps={[
+          { icon: Upload,   title: 'Tải PSD',       desc: 'Kéo & thả file .psd hoặc click chọn từ máy. Tối đa 80MB.', tip: 'File càng nhẹ, mở càng nhanh.' },
+          { icon: Layers,   title: 'Quản lý layer', desc: 'Panel trái hiển thị toàn bộ layer — khóa, ẩn, đổi tên, kéo-thả thứ tự.', tip: 'Bấm icon khóa/mắt để bật/tắt nhanh.' },
+          { icon: Type,     title: 'Chỉnh sửa',     desc: 'Click layer → bảng Properties bên phải để đổi text, màu, opacity, vị trí.', tip: 'Ctrl+Z / Ctrl+Y để undo/redo.' },
+          { icon: Download, title: 'Xuất ảnh',      desc: 'Bấm Export → chọn PNG / JPG / WebP HD không watermark (50 coins).', tip: 'Bản nháp tự động lưu trong trình duyệt.' },
+        ]}
+        tips={[
+          'Toàn bộ xử lý chạy trên trình duyệt — file PSD không bị upload đi đâu.',
+          'Bấm phím "?" bất cứ lúc nào để mở/đóng hướng dẫn này.',
+        ]}
+      />
     </div>
   )
 }

@@ -220,14 +220,16 @@ export async function walkPsdLayers(psd, onProgress) {
     const path = findPath(tree, parentTreeNodeId, [])
     if (path) groupPath.push(...path)
 
-    // Composite: returns the layer with all PS effects baked into pixels.
+    // Composite: returns the layer with PS effects baked into pixels but
+    // WITHOUT the layer's own opacity baked in (we apply opacity at render
+    // time so the editor's opacity slider stays meaningful).
     let bakedDataUrl = null
     if (width > 0 && height > 0) {
       try {
-        // composite(applyOpacity=true, composedOpacity=false): bake fx + own
-        // opacity but NOT the parent group opacity (we apply that at render
-        // time so toggling group visibility is cheap).
-        const rgba = await node.composite(true, false)
+        // composite(applyOpacity=false, composedOpacity=false): bake fx
+        // (stroke / shadow / gradient / glow) but keep alpha 1.0 so the
+        // renderer's `opacity` prop won't double-multiply.
+        const rgba = await node.composite(false, false)
         bakedDataUrl = await rgbaToDataUrl(rgba, width, height)
       } catch (err) {
         console.warn('[psd] composite failed for layer', node.name, err)
@@ -237,6 +239,9 @@ export async function walkPsdLayers(psd, onProgress) {
     const ownVisible = !priv.hidden
     const inheritedVisible = (groupVisibleById.get(parentTreeNodeId) ?? true) && ownVisible
     const opacity = (node.opacity ?? 255) / 255
+    // Combined ancestor group opacity. PS multiplies group opacity through
+    // descendants, e.g. group(50%) > layer(50%) renders at 25%.
+    const groupOpacity = groupOpacityById.get(parentTreeNodeId) ?? 1
 
     flat.push({
       id: nodeId,
@@ -262,6 +267,7 @@ export async function walkPsdLayers(psd, onProgress) {
       blendMode: normalizeBlendMode(priv.blendModeRaw),
       blendModeRaw: priv.blendModeRaw,
       opacity,
+      groupOpacity,         // multiplied into render-time opacity
       effects,
 
       // Lock state — by default a layer is unlocked iff its name is in the

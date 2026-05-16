@@ -34,6 +34,10 @@ function LayerNode({ layer, isSelected, onSelect, transformerRef, onChange, allo
   const replaced = useImage(layer.dataUrl !== layer.originalDataUrl ? layer.dataUrl : null)
   const nodeRef  = useRef(null)
 
+  // Locked layers stay clickable (so the user can pick them in the panel)
+  // but can't be moved/resized from the canvas.
+  const draggable = allowDrag && !layer.locked
+
   useEffect(() => {
     if (!transformerRef?.current || !nodeRef.current) return
     const tr = transformerRef.current
@@ -46,7 +50,7 @@ function LayerNode({ layer, isSelected, onSelect, transformerRef, onChange, allo
     }
   }, [isSelected, transformerRef, layer.id])
 
-  const opacity = layer.opacity ?? 1
+  const opacity = (layer.opacity ?? 1) * (layer.groupOpacity ?? 1)
   const blendMode = layer.blendMode && layer.blendMode !== 'source-over'
     ? layer.blendMode
     : 'source-over'
@@ -59,9 +63,10 @@ function LayerNode({ layer, isSelected, onSelect, transformerRef, onChange, allo
     globalCompositeOperation: blendMode,
     onClick: () => onSelect(layer.id),
     onTap: () => onSelect(layer.id),
-    draggable: allowDrag,
+    draggable,
     onDragEnd: e => onChange?.(layer.id, { left: e.target.x(), top: e.target.y() }),
     onTransformEnd: e => {
+      if (layer.locked) return
       const node = e.target
       onChange?.(layer.id, {
         left: node.x(),
@@ -308,12 +313,16 @@ const PsdCanvas = forwardRef(function PsdCanvas(
 
           <Transformer
             ref={transformerRef}
-            rotateEnabled={true}
             anchorSize={9}
             borderStroke="rgba(167,139,250,0.95)"
             anchorStroke="rgba(167,139,250,0.95)"
             anchorFill="#0c0c14"
             anchorCornerRadius={2}
+            // Hide handles when the selected layer is locked — visual cue
+            // that resize/rotate is disabled. The selection rectangle
+            // (border) is still visible so users still see what's picked.
+            resizeEnabled={!visibleLayers.find(l => l.id === selectedLayerId)?.locked}
+            rotateEnabled={!visibleLayers.find(l => l.id === selectedLayerId)?.locked}
           />
         </Layer>
       </Stage>
