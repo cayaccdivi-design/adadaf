@@ -42,11 +42,12 @@ export default function Sidebar() {
       {/* Logo */}
       <div className={clsx('flex items-center gap-3 px-4 py-5 border-b border-white/[0.06]',
         !sidebarOpen && !mobile && 'justify-center px-2')}>
-        <div className="relative flex-shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-cyan-400 flex items-center justify-center shadow-glow-sm">
-            <Sparkles size={18} className="text-white" />
+        <div className="relative flex-shrink-0 group/logo">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 via-violet-400 to-cyan-400 flex items-center justify-center shadow-glow-sm transition-all duration-500 group-hover/logo:shadow-glow-md group-hover/logo:scale-105"
+            style={{ backgroundSize: '200% 200%', animation: 'gradientFlow 6s ease infinite' }}>
+            <Sparkles size={18} className="text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]" />
           </div>
-          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-dark-200 animate-pulse" />
+          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-dark-200 anim-ring-pulse" />
         </div>
         <AnimatePresence>
           {(sidebarOpen || mobile) && (
@@ -78,21 +79,41 @@ export default function Sidebar() {
           <NavLink key={to} to={to} end={end}
             onClick={() => mobile && setMobileSidebarOpen(false)}
             className={({ isActive }) => clsx(
-              'relative flex items-center gap-3 rounded-xl transition-all duration-200 group',
+              'relative flex items-center gap-3 rounded-xl transition-all duration-300 group overflow-hidden',
               sidebarOpen || mobile ? 'px-3 py-2.5' : 'px-2 py-2.5 justify-center',
               isActive
-                ? 'bg-brand-500/20 text-white border border-brand-500/30'
-                : 'text-white/50 hover:text-white hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06]'
-            )}>
+                ? 'text-white border border-brand-500/40'
+                : 'text-white/50 hover:text-white hover:bg-white/[0.05] border border-transparent hover:border-white/[0.08]'
+            )}
+            style={({ isActive } = {}) => isActive ? {
+              boxShadow: '0 0 0 1px rgba(110,75,255,0.25), 0 6px 20px -6px rgba(110,75,255,0.5)',
+            } : {}}>
             {({ isActive }) => (<>
               {isActive && (
-                <motion.div layoutId="nav-indicator"
-                  className="absolute inset-0 rounded-xl bg-gradient-to-r from-brand-500/15 to-cyan-500/10"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }} />
+                <>
+                  <motion.div layoutId="nav-indicator"
+                    className="absolute inset-0 rounded-xl"
+                    style={{
+                      background: 'linear-gradient(90deg, rgba(110,75,255,0.22), rgba(77,208,255,0.14) 60%, transparent)',
+                    }}
+                    transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }} />
+                  {/* left active stripe */}
+                  <motion.span layoutId="nav-stripe"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full"
+                    style={{ background: 'linear-gradient(180deg, #6e4bff, #4dd0ff)', boxShadow: '0 0 8px rgba(110,75,255,0.7)' }} />
+                </>
               )}
-              <div className={clsx('relative flex-shrink-0 transition-colors',
-                isActive ? 'text-brand-300' : 'text-white/40 group-hover:text-white/70')}>
-                <Icon size={18} />
+              {/* Hover sheen */}
+              <span className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: 'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.06) 50%, transparent 70%)',
+                  transform: 'translateX(-100%)',
+                  animation: 'shimmer 2.2s ease infinite',
+                }} />
+              <div className={clsx('relative flex-shrink-0 transition-all duration-300',
+                isActive ? 'text-brand-200' : 'text-white/40 group-hover:text-white/85')}
+                style={isActive ? { filter: 'drop-shadow(0 0 6px rgba(124,92,255,0.65))' } : {}}>
+                <Icon size={18} className="group-hover:scale-110 transition-transform" />
               </div>
               <AnimatePresence>
                 {(sidebarOpen || mobile) && (
@@ -106,11 +127,11 @@ export default function Sidebar() {
                 )}
               </AnimatePresence>
               {badge && (sidebarOpen || mobile) && (
-                <span className={clsx('text-[9px] font-bold px-1.5 py-0.5 rounded-full',
-                  badge === 'AI' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-                    : badge === 'NEW' ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30'
-                    : badge === 'ADMIN' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                    : 'bg-rose-500/20 text-rose-300 border border-rose-500/30')}>
+                <span className={clsx('relative text-[9px] font-bold px-1.5 py-0.5 rounded-full transition-shadow duration-300',
+                  badge === 'AI' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 group-hover:shadow-[0_0_10px_rgba(77,208,255,0.55)]'
+                    : badge === 'NEW' ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30 group-hover:shadow-[0_0_10px_rgba(124,92,255,0.55)]'
+                    : badge === 'ADMIN' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30 group-hover:shadow-[0_0_10px_rgba(244,63,94,0.55)]'
+                    : 'bg-rose-500/20 text-rose-300 border border-rose-500/30 group-hover:shadow-[0_0_10px_rgba(244,63,94,0.55)]')}>
                   {badge}
                 </span>
               )}
@@ -134,10 +155,13 @@ export default function Sidebar() {
         )}
 
         {user && (
-          <div className={clsx('flex items-center gap-3 px-2 py-2',
+          <div className={clsx('flex items-center gap-3 px-2 py-2 rounded-xl transition-colors hover:bg-white/[0.04]',
             !sidebarOpen && !mobile && 'justify-center')}>
-            <img src={user.avatar} alt={user.name}
-              className="w-8 h-8 rounded-lg object-cover flex-shrink-0 border border-white/10" />
+            <div className="relative flex-shrink-0">
+              <img src={user.avatar} alt={user.name}
+                className="w-8 h-8 rounded-lg object-cover border border-white/10" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-dark-200 anim-blink" />
+            </div>
             <AnimatePresence>
               {(sidebarOpen || mobile) && (
                 <motion.div

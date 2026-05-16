@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Upload, Download, Image, LayoutGrid, X, Trash2, Bot, Send } from 'lucide-react'
+import { Upload, Download, Image, LayoutGrid, X, Trash2, Bot, Send, MousePointer2, Palette, Wand2, Sparkles } from 'lucide-react'
 import clsx from 'clsx'
+import GuideSection from '../components/ui/GuideSection'
 
 const LAYOUTS = [
   { id: 'h2',  label: '2 ngang',   cols: 2, rows: 1, slots: [{x:0,y:0,w:1,h:1},{x:1,y:0,w:1,h:1}] },
@@ -256,6 +257,26 @@ export default function CollagePage() {
         </h1>
         <p className="text-white/40 text-sm mt-1">Tạo ảnh ghép từ nhiều ảnh với nhiều bố cục khác nhau</p>
       </motion.div>
+
+      {/* Guide */}
+      <GuideSection
+        title="Hướng dẫn ghép ảnh"
+        subtitle="Tạo collage chuyên nghiệp với 6+ bố cục, tùy chỉnh khoảng cách & bo góc"
+        accent="pink"
+        icon={LayoutGrid}
+        badgeText="4 bước"
+        steps={[
+          { icon: Upload,        title: 'Tải ảnh',        desc: 'Click khu vực upload, chọn nhiều ảnh cùng lúc.', tip: 'Có thể tải tối đa 6 ảnh để khớp với mọi bố cục.' },
+          { icon: LayoutGrid,    title: 'Chọn bố cục',    desc: 'Chọn 1 trong 6 layout: 2 ngang, 2 dọc, 4 lưới, 1+2, 1+3, 3 ngang.', tip: 'Bot AI có thể gợi ý layout phù hợp với số ảnh.' },
+          { icon: Palette,       title: 'Tùy chỉnh',      desc: 'Đổi màu nền, gap (khoảng cách), bo góc theo phong cách bạn thích.', tip: 'Gap 4–8px cho look hiện đại, 12+ cho phong cách magazine.' },
+          { icon: Download,      title: 'Tải xuống',      desc: 'Xuất file PNG chất lượng cao, dùng đăng web/social.', tip: 'Ảnh xuất full-resolution không watermark.' },
+        ]}
+        tips={[
+          'Sử dụng bot AI ở góc dưới phải để được gợi ý màu nền, layout, gap, bo góc.',
+          'Có thể kéo-thả lại ảnh trong slot để hoán đổi vị trí.',
+          'Toàn bộ xử lý chạy trên trình duyệt — ảnh của bạn không bị upload đi đâu.',
+        ]}
+      />
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-6">
         {/* Left: Canvas Preview */}

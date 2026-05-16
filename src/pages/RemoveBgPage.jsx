@@ -1,7 +1,8 @@
 import { useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Upload, Image, Download, Trash2, Scissors, Loader, Sparkles, AlertCircle, CheckCircle } from 'lucide-react'
+import { Upload, Image, Download, Trash2, Scissors, Loader, Sparkles, AlertCircle, CheckCircle, MousePointer2, Wand2, FileImage } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore'
+import GuideSection from '../components/ui/GuideSection'
 
 async function removeBg(imageFile) {
   // Client-side background removal demo.
@@ -111,12 +112,6 @@ export default function RemoveBgPage() {
     setFile(null); setPreview(null); setResult(null); setError(null); setProgress(0)
   }
 
-  const STEPS = [
-    { icon: Upload, title: 'Upload ảnh', desc: 'Kéo thả hoặc click để chọn' },
-    { icon: Sparkles, title: 'AI xử lý', desc: 'Phân tích & tách nền tự động' },
-    { icon: Download, title: 'Tải xuống', desc: 'Xuất file PNG trong suốt' },
-  ]
-
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
       {/* Header */}
@@ -130,22 +125,24 @@ export default function RemoveBgPage() {
         <p className="text-white/40 text-sm">Tách nền ảnh chỉ trong vài giây với công nghệ AI tiên tiến</p>
       </motion.div>
 
-      {/* Steps */}
-      <div className="grid grid-cols-3 gap-4">
-        {STEPS.map(({ icon: Icon, title, desc }, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="glass-card p-4 text-center">
-            <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg, rgba(110,75,255,0.2), rgba(77,208,255,0.1))' }}>
-              <Icon size={18} className="text-brand-300" />
-            </div>
-            <div className="text-xs text-white/30 mb-1">0{i+1}</div>
-            <p className="text-sm font-semibold text-white">{title}</p>
-            <p className="text-xs text-white/40 mt-0.5">{desc}</p>
-          </motion.div>
-        ))}
-      </div>
+      {/* Guide */}
+      <GuideSection
+        title="Hướng dẫn xóa nền AI"
+        subtitle="3 bước đơn giản để tách nền ảnh tự động — không cần Photoshop"
+        accent="cyan"
+        icon={Wand2}
+        badgeText="3 bước"
+        steps={[
+          { icon: MousePointer2, title: 'Tải ảnh lên', desc: 'Kéo & thả file vào khung, hoặc click để chọn từ máy.', tip: 'Hỗ trợ JPG, PNG, WEBP — tối đa 10MB.' },
+          { icon: Sparkles,      title: 'AI phân tích',  desc: 'Mô hình AI tự động phát hiện chủ thể và tách khỏi nền.', tip: 'Quá trình chạy hoàn toàn trên trình duyệt.' },
+          { icon: Download,      title: 'Tải kết quả',   desc: 'Xuất file PNG nền trong suốt, sử dụng cho mọi dự án.', tip: 'Có thể chỉnh sửa ngay trong PSD Editor sau đó.' },
+        ]}
+        tips={[
+          'Ảnh có chủ thể rõ nét, đối lập với nền sẽ cho kết quả tốt nhất.',
+          'Tránh ảnh quá mờ hoặc nhiều chủ thể chồng lấp.',
+          'Có thể tải nhiều ảnh và xử lý lần lượt.',
+        ]}
+      />
 
       {/* Main area */}
       {!file ? (

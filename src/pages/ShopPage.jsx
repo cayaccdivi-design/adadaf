@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, Search, Star, Coins, CheckCircle, Eye, Zap, Lock, Sparkles, Edit2, Trash2, ChevronLeft, ChevronRight, ImagePlus } from 'lucide-react'
+import { ShoppingBag, Search, Star, Coins, CheckCircle, Eye, Zap, Lock, Sparkles, Edit2, Trash2, ChevronLeft, ChevronRight, ImagePlus, Filter, MousePointer2, Wand2 } from 'lucide-react'
 import { useAuthStore } from '../store/useAuthStore'
 import { useShopStore } from '../store/useShopStore'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
+import GuideSection from '../components/ui/GuideSection'
 import Modal from '../components/ui/Modal'
 
 /* ─── DATA ───────────────────────────────────────────────── */
@@ -770,6 +771,26 @@ export default function ShopPage() {
 
 
       </div>
+
+      {/* ── Guide ── */}
+      <GuideSection
+        title="Hướng dẫn mua hàng"
+        subtitle="Mua thumbnail, logo, banner cao cấp — chỉnh sửa trực tiếp sau khi sở hữu"
+        accent="brand"
+        icon={ShoppingBag}
+        compact
+        badgeText="4 bước"
+        steps={[
+          { icon: Filter,        title: 'Lọc sản phẩm',  desc: 'Chọn danh mục (Thumbnail, Logo, Banner...) và loại (Tĩnh / Động).', tip: 'Sản phẩm Động (animated) có hiệu ứng video, Lottie, GIF.' },
+          { icon: MousePointer2, title: 'Xem chi tiết',  desc: 'Click vào card để mở preview lớn, slideshow ảnh và mô tả đầy đủ.' },
+          { icon: Coins,         title: 'Thanh toán',    desc: 'Đủ coin trong ví thì click "Mua ngay". Có thể nhập mã giảm giá.', tip: 'Nạp coin nhanh ở trang Topup nếu chưa đủ.' },
+          { icon: Wand2,         title: 'Chỉnh sửa',     desc: 'Sản phẩm có nhãn "Có thể tùy chỉnh" sẽ mở Customer Editor.', tip: 'Đổi text, màu, ảnh, xuất file PNG/JPG ngay trên web.' },
+        ]}
+        tips={[
+          'Mọi sản phẩm sau khi mua đều thuộc sở hữu vĩnh viễn — không cần mua lại.',
+          'Mã giảm giá thường được tặng kèm khi quay số trong trang Hộp quà.',
+        ]}
+      />
 
       {/* ── Filters ── */}
       <div className="flex flex-wrap items-center gap-2">
